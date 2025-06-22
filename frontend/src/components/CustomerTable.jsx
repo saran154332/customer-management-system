@@ -4,9 +4,19 @@ import { FaEye, FaEdit, FaUserSlash } from 'react-icons/fa';
 function CustomerTable({ customers }) {
   const [search, setSearch] = useState('');
 
-  const filtered = customers.filter(c =>
-    c.name.toLowerCase().includes(search.toLowerCase())
-  );
+  const filtered = customers.filter(c => {
+    const name = c.name || '';
+    const email = c.email || '';
+    const domain = c.domain || '';
+    const phone = c.phone || '';
+    const searchLower = search.toLowerCase();
+    return (
+      name.toLowerCase().includes(searchLower) ||
+      email.toLowerCase().includes(searchLower) ||
+      domain.toLowerCase().includes(searchLower) ||
+      phone.toLowerCase().includes(searchLower)
+    );
+  });
 
   return (
     <>
@@ -27,7 +37,7 @@ function CustomerTable({ customers }) {
             <th>Name</th>
             <th>Email</th>
             <th>Domain</th>
-            <th>Manage</th>
+            <th>Phone</th>
             <th>Status</th>
             <th>Actions</th>
           </tr>
@@ -35,11 +45,13 @@ function CustomerTable({ customers }) {
         <tbody>
           {filtered.map((c, i) => (
             <tr key={i}>
-              <td>{c.name}</td>
-              <td>{c.email}</td>
-              <td>{c.domain}</td>
-              <td><button className="btn btn-outline-secondary btn-sm">Manage Learners</button></td>
-              <td><span className="badge bg-success">Active</span></td>
+              <td>{c.name || 'N/A'}</td>
+              <td>{c.email || 'N/A'}</td>
+              <td>{c.domain || 'N/A'}</td>
+              <td>{c.phone || 'N/A'}</td>
+              <td>
+                <span className={`badge ${c.isActive ? 'bg-success' : 'bg-secondary'}`}>{c.isActive ? 'Active' : 'Inactive'}</span>
+              </td>
               <td>
                 <FaEye className="me-2 text-primary cursor-pointer" />
                 <FaEdit className="me-2 text-success cursor-pointer" />
